@@ -1,6 +1,7 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import type { PrismaService } from '../database/prisma.service';
 import type { ApiData } from '@prisma/client';
+import { UpdateApiDatumDto } from './dto/update-api-datum.dto';
 import { env } from 'node:process';
 
 @Injectable()
@@ -36,19 +37,21 @@ export class ApiDataService implements OnModuleInit {
     });
   }
 
-  async updateLastBlockFetched(newValue: bigint): Promise<ApiData> {
+  async updateLastBlockFetched(
+    updateApiDatumDto: UpdateApiDatumDto,
+  ): Promise<ApiData> {
     const existingRecord = await this.getLastBlockFetched();
 
     // Always assume there's one record
     if (existingRecord) {
       return this.prisma.apiData.update({
         where: { lastBlockFetched: existingRecord.lastBlockFetched }, // Update the existing record
-        data: { lastBlockFetched: newValue },
+        data: updateApiDatumDto,
       });
     }
     // Create a new record if for some reason it doesn't exist
     return this.prisma.apiData.create({
-      data: { lastBlockFetched: newValue },
+      data: updateApiDatumDto,
     });
   }
 }

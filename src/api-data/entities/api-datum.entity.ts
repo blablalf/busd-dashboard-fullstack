@@ -1,1 +1,3 @@
-export class ApiDatum {}
+export class ApiDatum {
+  lastBlockFetched: bigint;
+}

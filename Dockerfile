@@ -5,10 +5,10 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install -g pnpm
 RUN pnpm install
-RUN pnpm prisma generate --schema=prisma/schema.prisma
 
 COPY . .
 
+RUN pnpm prisma generate
 RUN pnpm run build
 
 EXPOSE 3000
