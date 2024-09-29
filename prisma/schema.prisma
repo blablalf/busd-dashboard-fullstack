@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApiData {
+  lastBlockFetched BigInt @id
+}
+
+model UserData {
+  userAddress      String   @id
+  userBalance      BigInt?
+  userTokenBalance  BigInt?
+}
+
+model Event {
+  id          Int     @id @default(autoincrement())
+  eventName   String
+  txHash      String
+  from        String?
+  to          String?
+  owner       String?
+  spender     String?
+  value       BigInt?
+  blockNumber BigInt
+}
