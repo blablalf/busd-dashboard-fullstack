@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { EventService } from './event.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
@@ -12,9 +20,19 @@ export class EventController {
     return this.eventService.create(createEventDto);
   }
 
+  @Post('many')
+  createMany(@Body() createEventDtos: CreateEventDto[]) {
+    return this.eventService.createMany(createEventDtos);
+  }
+
   @Get()
   findAll() {
     return this.eventService.findAll();
+  }
+
+  @Get('many')
+  findMany(@Body() ids: number[]) {
+    return this.eventService.findMany(ids);
   }
 
   @Get(':id')

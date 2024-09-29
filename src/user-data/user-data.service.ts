@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDatumDto } from './dto/create-user-datum.dto';
 import { UpdateUserDatumDto } from './dto/update-user-datum.dto';
+import { UserData } from '@prisma/client';
+import { PrismaService } from '../database/prisma.service';
 
 @Injectable()
 export class UserDataService {
-  create(createUserDatumDto: CreateUserDatumDto) {
-    return 'This action adds a new userDatum';
+  constructor(private prisma: PrismaService) {}
+
+  create(createUserDatumDto: CreateUserDatumDto): Promise<UserData> {
+    return this.prisma.userData.create({
+      data: createUserDatumDto,
+    });
   }
 
   findAll() {
-    return `This action returns all userData`;
+    return this.prisma.userData.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userDatum`;
+  findOne(address: string) {
+    return this.prisma.userData.findUnique({
+      where: { userAddress: address },
+    });
   }
 
-  update(id: number, updateUserDatumDto: UpdateUserDatumDto) {
-    return `This action updates a #${id} userDatum`;
+  update(address: string, updateUserDatumDto: UpdateUserDatumDto) {
+    return this.prisma.userData.update({
+      where: { userAddress: address },
+      data: updateUserDatumDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userDatum`;
+  remove(address: string) {
+    return this.prisma.userData.delete({
+      where: { userAddress: address },
+    });
+  }
+
+  removeAll() {
+    return this.prisma.userData.deleteMany();
   }
 }

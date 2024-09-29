@@ -1,4 +1,17 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateEventDto } from './create-event.dto';
+export class UpdateEventDto {
+  eventName?: string;
 
-export class UpdateEventDto extends PartialType(CreateEventDto) {}
+  txHash?: string;
+
+  from?: string;
+
+  to?: string;
+
+  owner?: string;
+
+  spender?: string;
+
+  value?: bigint;
+
+  blockNumber?: bigint;
+}
