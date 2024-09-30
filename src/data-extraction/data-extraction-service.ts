@@ -5,6 +5,7 @@ import { parseAbi } from 'viem';
 
 import { PrismaService } from '../database/prisma.service';
 import ClientService from './client-service';
+import { CreateEventDto } from 'src/database/event/dto/create-event.dto';
 
 @Injectable()
 export class DataExtractionService implements OnModuleInit {
@@ -29,6 +30,7 @@ export class DataExtractionService implements OnModuleInit {
     });
     const lastBlockFetched: bigint =
       lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
+
     const contractAddress = env.CONTRACT_ADDRESS;
 
     const currentBlock = await this.client.getClient().getBlockNumber();
@@ -55,19 +57,21 @@ export class DataExtractionService implements OnModuleInit {
       const to = 'to' in args ? (args.to as string) : null;
       const owner = 'owner' in args ? (args.owner as string) : null;
       const spender = 'spender' in args ? (args.spender as string) : null;
-      const value = args.value;
+      const value = args.value as bigint;
+
+      const createEventDto: CreateEventDto = {
+        eventName: name,
+        txHash: transactionHash,
+        from: from,
+        to: to,
+        owner: owner,
+        spender: spender,
+        value: value,
+        blockNumber: eventBlockNumber,
+      };
 
       await this.prisma.event.create({
-        data: {
-          eventName: name,
-          txHash: transactionHash,
-          from,
-          to,
-          owner,
-          spender,
-          value,
-          blockNumber: eventBlockNumber,
-        },
+        data: createEventDto,
       });
 
       await this.prisma.apiData.update({

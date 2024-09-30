@@ -32,6 +32,6 @@ model Event {
   to          String?
   owner       String?
   spender     String?
-  value       BigInt?
+  value       BigInt
   blockNumber BigInt
 }

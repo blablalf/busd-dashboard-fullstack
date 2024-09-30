@@ -8,6 +8,8 @@ services:
       - "5432:5432"
     networks:
       - app-network
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
   backend:
     build: .
