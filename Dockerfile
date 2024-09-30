@@ -2,15 +2,15 @@ FROM node:20-alpine
 
 WORKDIR /usr/app
 
+# RUN apk add --no-cache postgresql-client # For testing
 RUN npm install -g pnpm
 
-COPY . .
-
-RUN pnpm install
-RUN rm -rf dist
-RUN pnpm prisma generate
-RUN pnpm run build
+# RUN rm -rf dist
+# RUN rm -rf node_modules
+# RUN pnpm install
+# RUN pnpm prisma generate
+# RUN pnpm run build
 
 EXPOSE 3000
 
-CMD ["pnpm", "run", "start:prod"]
+CMD ["pnpm", "run", "start:dev"]

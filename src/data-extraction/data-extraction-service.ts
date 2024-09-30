@@ -3,13 +3,16 @@ import type { OnModuleInit } from '@nestjs/common';
 import { env } from 'node:process';
 import { parseAbi } from 'viem';
 
-import type { PrismaService } from '../database/prisma.service';
+import { PrismaService } from '../database/prisma.service';
 import ClientService from './client-service';
 
 @Injectable()
 export class DataExtractionService implements OnModuleInit {
   private unwatch;
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly client: ClientService,
+  ) {}
 
   async onModuleInit() {
     await this.extractData();
@@ -21,8 +24,6 @@ export class DataExtractionService implements OnModuleInit {
   }
 
   async extractData() {
-    const publicClient = ClientService.getClient();
-
     const lastBlockFetchedResult = await this.prisma.apiData.findFirst({
       select: { lastBlockFetched: true },
     });
@@ -30,9 +31,9 @@ export class DataExtractionService implements OnModuleInit {
       lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
     const contractAddress = env.CONTRACT_ADDRESS;
 
-    const currentBlock = await publicClient.getBlockNumber();
+    const currentBlock = await this.client.getClient().getBlockNumber();
 
-    const events = await publicClient.getLogs({
+    const events = await this.client.getClient().getLogs({
       address: contractAddress as `0x${string}`,
       events: parseAbi([
         'event Approval(address indexed owner, address indexed spender, uint256 value)',
@@ -82,7 +83,6 @@ export class DataExtractionService implements OnModuleInit {
   }
 
   async listenEvents() {
-    const publicClient = ClientService.getClient();
     const contractAddress = env.CONTRACT_ADDRESS;
     const lastBlockFetchedResult = await this.prisma.apiData.findFirst({
       select: { lastBlockFetched: true },
@@ -90,7 +90,7 @@ export class DataExtractionService implements OnModuleInit {
     const lastBlockFetched: bigint =
       lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
 
-    return publicClient.watchEvent({
+    return this.client.getClient().watchEvent({
       fromBlock: lastBlockFetched,
       events: parseAbi([
         'event Approval(address indexed owner, address indexed sender, uint256 value)',

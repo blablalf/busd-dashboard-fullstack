@@ -5,17 +5,16 @@ import { env } from 'node:process';
 
 @Injectable()
 export default class ClientService {
-  private static client;
+  private client;
 
   constructor() {
-    const publicClient = createPublicClient({
+    this.client = createPublicClient({
       chain: sepolia,
       transport: http(env.RPC_URL as string),
     });
-    ClientService.client = publicClient;
   }
 
-  static getClient(): PublicClient {
+  getClient(): PublicClient {
     return this.client;
   }
 }

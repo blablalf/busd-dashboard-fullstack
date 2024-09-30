@@ -1,8 +1,8 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
-import { PrismaService } from '../prisma.service';
-import type { ApiData } from '@prisma/client';
+import { ApiData } from '@prisma/client';
 import { UpdateApiDatumDto } from './dto/update-api-datum.dto';
 import { env } from 'node:process';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class ApiDataService implements OnModuleInit {
