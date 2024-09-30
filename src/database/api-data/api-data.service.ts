@@ -1,19 +1,21 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
-import type { PrismaService } from '../database/prisma.service';
+import { PrismaService } from '../prisma.service';
 import type { ApiData } from '@prisma/client';
 import { UpdateApiDatumDto } from './dto/update-api-datum.dto';
 import { env } from 'node:process';
 
 @Injectable()
 export class ApiDataService implements OnModuleInit {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async getLastBlockFetched(): Promise<ApiData> {
+  async getLastBlockFetched() {
     return this.prisma.apiData.findFirst();
   }
 
   async onModuleInit() {
-    const initialBlockFetched = BigInt(env.TOKEN_CREATE_BLOCK_NUMBER || 0);
+    const initialBlockFetched = BigInt(
+      env.TOKEN_CREATE_BLOCK_NUMBER || BigInt(0),
+    );
     const count = await this.prisma.apiData.count();
     if (count === 0) {
       await this.prisma.apiData.create({
@@ -22,7 +24,7 @@ export class ApiDataService implements OnModuleInit {
     }
   }
 
-  async resetLastBlockFetched(): Promise<ApiData> {
+  async resetLastBlockFetched() {
     const initialValue = BigInt(process.env.TOKEN_CREATE_BLOCK_NUMBER || 0);
     const count = await this.prisma.apiData.count();
     if (count === 0) {

@@ -1,16 +1,13 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserDataControllerController } from './user-data-controller/user-data-controller.controller';
-import { DataExtraction } from './data-extraction/data-extraction';
-import { PrismaService } from './database/prisma.service';
-import { ApiDataModule } from './api-data/api-data.module';
-import { UserDataModule } from './user-data/user-data.module';
-import { EventModule } from './event/event.module';
+import { PrismaModule } from './database/prisma.module';
+import ClientService from './data-extraction/client-service';
+import { DataExtractionService } from './data-extraction/data-extraction-service';
 
 @Module({
-  imports: [ApiDataModule, UserDataModule, EventModule],
-  controllers: [AppController, UserDataControllerController],
-  providers: [AppService, PrismaService, DataExtraction],
+  imports: [PrismaModule],
+  controllers: [AppController],
+  providers: [AppService, ClientService, DataExtractionService],
 })
 export class AppModule {}

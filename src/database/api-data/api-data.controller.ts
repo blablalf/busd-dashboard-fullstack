@@ -18,8 +18,6 @@ export class ApiDataController {
 
   @Patch()
   update(@Body() updateApiDatumDto: UpdateApiDatumDto) {
-    return this.apiDataService.updateLastBlockFetched(
-      updateApiDatumDto.lastBlockFetched,
-    );
+    return this.apiDataService.updateLastBlockFetched(updateApiDatumDto);
   }
 }

@@ -1,13 +1,13 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
-WORKDIR /usr/src/app
+WORKDIR /usr/app
 
-COPY package*.json ./
 RUN npm install -g pnpm
-RUN pnpm install
 
 COPY . .
 
+RUN pnpm install
+RUN rm -rf dist
 RUN pnpm prisma generate
 RUN pnpm run build
 
