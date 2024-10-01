@@ -29,7 +29,7 @@ export class DataExtractionService implements OnModuleInit {
       select: { lastBlockFetched: true },
     });
     let lastBlockFetched: bigint =
-      lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
+      BigInt(lastBlockFetchedResult?.lastBlockFetched) ?? BigInt(0);
     const contractAddress = env.CONTRACT_ADDRESS;
 
     const currentBlock = await this.client.getClient().getBlockNumber();
@@ -48,7 +48,8 @@ export class DataExtractionService implements OnModuleInit {
       lastBlockFetchedResult = await this.prisma.apiData.findFirst({
         select: { lastBlockFetched: true },
       });
-      lastBlockFetched = lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
+      lastBlockFetched =
+        BigInt(lastBlockFetchedResult?.lastBlockFetched) ?? BigInt(0);
       const {
         args,
         eventName: name,
@@ -70,7 +71,7 @@ export class DataExtractionService implements OnModuleInit {
         owner: owner,
         spender: spender,
         value: value.toString(),
-        blockNumber: eventBlockNumber,
+        blockNumber: eventBlockNumber.toString(),
       };
 
       await this.prisma.event.create({
@@ -95,7 +96,7 @@ export class DataExtractionService implements OnModuleInit {
       select: { lastBlockFetched: true },
     });
     const lastBlockFetched: bigint =
-      lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
+      BigInt(lastBlockFetchedResult?.lastBlockFetched) ?? BigInt(0);
 
     return this.client.getClient().watchEvent({
       fromBlock: lastBlockFetched,
@@ -128,10 +129,8 @@ export class DataExtractionService implements OnModuleInit {
             owner: owner,
             spender: spender,
             value: value.toString(),
-            blockNumber: eventBlockNumber,
+            blockNumber: eventBlockNumber.toString(),
           };
-
-          console.log('Creating event:', createEventDto);
 
           await this.prisma.event.create({
             data: createEventDto,

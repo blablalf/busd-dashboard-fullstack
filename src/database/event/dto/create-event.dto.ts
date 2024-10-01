@@ -13,5 +13,5 @@ export class CreateEventDto {
 
   value: string;
 
-  blockNumber: bigint;
+  blockNumber: string;
 }
