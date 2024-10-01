@@ -20,7 +20,7 @@ export default function useGetLastActionsApi(
   anyUser: boolean,
   actionsAmount: number
 ) {
-  const { data: actions } = useGetActions();
+  const { data: actions, isLoading: getActionsLoading } = useGetActions();
   const { data: userAddress } = useGetUserAddress();
 
   const checkIfUserAction = (action: Action) => {
@@ -40,7 +40,6 @@ export default function useGetLastActionsApi(
     anyUser: boolean,
     actionsAmount: number
   ) => {
-    console.log("userAddress", userAddress);
     let lastActionCounter = 0;
     const lastActions: Action[] = [];
     const timestamps: bigint[] = [];
@@ -50,7 +49,6 @@ export default function useGetLastActionsApi(
         lastActionCounter < actionsAmount && actions.length - 1 > actionIndex;
         actionIndex++
       ) {
-        console.log("lastActionCounter, actionIndex", lastActionCounter, actionIndex,  lastActionCounter < actionsAmount && actions.length - 1 > actionIndex + 1);
         if (
           !anyUser &&
           checkIfUserAction(actions[actions.length - 1 - actionIndex])
@@ -64,7 +62,6 @@ export default function useGetLastActionsApi(
           lastActionCounter++;
         }
       }
-      console.log("lastActions", anyUser, lastActions);
       for (const lastAction of lastActions) {
         timestamps.push(
           (await getBlockTimestamp(BigInt(lastAction.blockNumber))) as bigint
@@ -81,5 +78,6 @@ export default function useGetLastActionsApi(
   return useQuery({
     queryKey: [anyUser ? "lastAnyUserActions" : "lastUserActions", userAddress],
     queryFn: () => getLastActionEvents(anyUser, actionsAmount),
+    enabled: !getActionsLoading,
   });
 }
