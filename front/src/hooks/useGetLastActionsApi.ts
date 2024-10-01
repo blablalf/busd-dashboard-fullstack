@@ -1,9 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import useGetActions from "./useGetActions";
 import useGetUserAddress from "./useGetUserAddress";
-import { getBlockTimestamp } from "../adapters/ClientsAdapter";
+import { address0, getBlockTimestamp } from "../adapters/ClientsAdapter";
 
 interface Action {
+  id: number;
   blockNumber: string;
   eventName: string;
   timestamp: bigint;
@@ -15,24 +16,55 @@ interface Action {
   value: string;
 }
 
-export default function useGetLastActionsApi(anyUser: boolean, actionsAmount: number) {
+export default function useGetLastActionsApi(
+  anyUser: boolean,
+  actionsAmount: number
+) {
   const { data: actions } = useGetActions();
-  const userAddress = useGetUserAddress();
+  const { data: userAddress } = useGetUserAddress();
 
-  const getLastActionEvents = async (anyUser: boolean, actionsAmount: number) => {
+  const checkIfUserAction = (action: Action) => {
+    if (
+      (action.eventName == "Approval" && action.owner == userAddress) ||
+      (action.eventName == "Transfer" && action.from == userAddress) ||
+      (action.eventName == "Transfer" &&
+        action.from == address0 &&
+        action.to == userAddress)
+    ) {
+      return true;
+    }
+    return false;
+  };
+
+  const getLastActionEvents = async (
+    anyUser: boolean,
+    actionsAmount: number
+  ) => {
+    console.log("userAddress", userAddress);
     let lastActionCounter = 0;
-    const lastActions: [Action] = actions;
+    const lastActions: Action[] = [];
     const timestamps: bigint[] = [];
     if (actions) {
-      for (let actionIndex = 0; lastActionCounter < actionsAmount && actions.length > actionIndex; actionIndex++) {
-        if (!anyUser && actions[actions.length - actionIndex].from == userAddress || actions[actions.length - actionIndex].owner == userAddress) {
-            lastActions[actionIndex] = actions[actions.length - actionIndex];
-            lastActionCounter++;
+      for (
+        let actionIndex = 0;
+        lastActionCounter < actionsAmount && actions.length - 1 > actionIndex;
+        actionIndex++
+      ) {
+        console.log("lastActionCounter, actionIndex", lastActionCounter, actionIndex,  lastActionCounter < actionsAmount && actions.length - 1 > actionIndex + 1);
+        if (
+          !anyUser &&
+          checkIfUserAction(actions[actions.length - 1 - actionIndex])
+        ) {
+          lastActions[lastActionCounter] =
+            actions[actions.length - 1 - actionIndex];
+          lastActionCounter++;
         } else if (anyUser) {
-            lastActions[actionIndex] = actions[actions.length - actionIndex];
-            lastActionCounter++;
+          lastActions[lastActionCounter] =
+            actions[actions.length - 1 - actionIndex];
+          lastActionCounter++;
         }
       }
+      console.log("lastActions", anyUser, lastActions);
       for (const lastAction of lastActions) {
         timestamps.push(
           (await getBlockTimestamp(BigInt(lastAction.blockNumber))) as bigint
@@ -49,7 +81,5 @@ export default function useGetLastActionsApi(anyUser: boolean, actionsAmount: nu
   return useQuery({
     queryKey: [anyUser ? "lastAnyUserActions" : "lastUserActions", userAddress],
     queryFn: () => getLastActionEvents(anyUser, actionsAmount),
-    refetchInterval: 60000,
-    structuralSharing: false,
   });
 }
