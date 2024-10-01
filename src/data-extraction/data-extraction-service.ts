@@ -100,7 +100,7 @@ export class DataExtractionService implements OnModuleInit {
     return this.client.getClient().watchEvent({
       fromBlock: lastBlockFetched,
       events: parseAbi([
-        'event Approval(address indexed owner, address indexed sender, uint256 value)',
+        'event Approval(address indexed owner, address indexed spender, uint256 value)',
         'event Transfer(address indexed from, address indexed to, uint256 value)',
       ]),
       address: contractAddress as `0x${string}`,
@@ -130,6 +130,8 @@ export class DataExtractionService implements OnModuleInit {
             value: value.toString(),
             blockNumber: eventBlockNumber,
           };
+
+          console.log('Creating event:', createEventDto);
 
           await this.prisma.event.create({
             data: createEventDto,
