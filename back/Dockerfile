@@ -1,6 +1,6 @@
 FROM node:20-alpine
 
-WORKDIR /usr/app
+WORKDIR /usr/app/back
 
 # RUN apk add --no-cache postgresql-client # For testing
 RUN npm install -g pnpm

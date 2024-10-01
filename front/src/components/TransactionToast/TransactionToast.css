@@ -1,0 +1,21 @@
+.transaction-toast {
+    position: fixed;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 1px 7px #151515;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.transaction-toast a {
+    color: #10002B;
+    font-size: 15px;
+    margin-left: 8px;
+}
+
+.transaction-toast p {
+    font-size: 15px;
+    margin-left: 8px;
+}

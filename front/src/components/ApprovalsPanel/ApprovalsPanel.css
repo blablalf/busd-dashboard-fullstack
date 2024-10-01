@@ -1,0 +1,75 @@
+.approvals-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #240046;
+    border-radius: 10px;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-shadow: 0 1px 7px #151515;
+}
+
+.approvals-panel ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+.approval-card-populated {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin: 20px;
+}
+
+.spinner {
+    animation: spin 2s linear infinite;
+    color: white;
+    margin-right: 10px;
+}
+
+.approval-panel-info {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: row;
+    margin: 0;
+}
+
+.approvals-panel h3 {
+    color: #9D4EDD;
+    font-size: 25px;
+    margin-bottom: 0;
+}
+
+.approvals-panel h4 {
+    color: #9D4EDD;
+    font-size: 14px;
+    margin: 2px;
+}
+
+.approvals-panel p {
+    color: #ffd4e8;
+    font-size: 14px;
+    margin: 2px;
+}
+
+.approval-card-none {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

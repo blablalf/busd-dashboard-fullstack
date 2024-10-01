@@ -3,7 +3,7 @@ services:
   db:
     image: postgres:13
     env_file:
-      - .env
+      - ./back/.env
     ports:
       - "5432:5432"
     networks:
@@ -12,17 +12,32 @@ services:
       - db_data:/var/lib/postgresql/data
 
   backend:
-    build: .
+    build:
+      context: ./back
     ports:
       - "3000:3000"
     depends_on:
       - db
     env_file:
-      - .env
+      - ./back/.env
     volumes:
-      - ./:/usr/app
+      - ./back:/usr/app/back
     networks:
       - app-network
+
+  frontend:
+    build:
+      context: ./front
+    ports:
+      - "5173:5173"
+    networks:
+      - app-network
+    depends_on:
+      - backend
+    env_file:
+      - ./front/.env
+    volumes:
+      - ./front:/usr/app/front
 
 networks:
   app-network:

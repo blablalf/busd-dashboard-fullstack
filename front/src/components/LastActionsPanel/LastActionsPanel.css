@@ -1,0 +1,40 @@
+.last-actions-panels {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-direction: row;
+    background-color: #240046;
+    border-radius: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    box-shadow: 0 1px 7px #151515;
+}
+
+.last-actions-panels ul {
+    list-style-type: none;
+    padding-inline-start: 0;
+}
+
+.last-actions-panels h3 {
+    color: #9D4EDD;
+    font-size: 25px;
+}
+
+.approval-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.panel {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-size: 20x;
+}

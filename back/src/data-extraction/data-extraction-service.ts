@@ -5,7 +5,7 @@ import { parseAbi } from 'viem';
 
 import { PrismaService } from '../database/prisma.service';
 import ClientService from './client-service';
-import { CreateEventDto } from 'src/database/event/dto/create-event.dto';
+import { CreateEventDto } from '../database/event/dto/create-event.dto';
 
 @Injectable()
 export class DataExtractionService implements OnModuleInit {
