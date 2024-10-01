@@ -11,7 +11,7 @@ export class CreateEventDto {
 
   spender?: string;
 
-  value: bigint;
+  value: string;
 
   blockNumber: bigint;
 }

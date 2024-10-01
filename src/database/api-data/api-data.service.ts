@@ -32,9 +32,8 @@ export class ApiDataService implements OnModuleInit {
         data: { lastBlockFetched: initialValue },
       });
     }
-    const existingRecord = await this.getLastBlockFetched();
     return this.prisma.apiData.update({
-      where: { lastBlockFetched: existingRecord.lastBlockFetched },
+      where: { id: 1 },
       data: { lastBlockFetched: initialValue },
     });
   }
@@ -47,7 +46,7 @@ export class ApiDataService implements OnModuleInit {
     // Always assume there's one record
     if (existingRecord) {
       return this.prisma.apiData.update({
-        where: { lastBlockFetched: existingRecord.lastBlockFetched }, // Update the existing record
+        where: { id: 1 }, // Update the existing record
         data: updateApiDatumDto,
       });
     }

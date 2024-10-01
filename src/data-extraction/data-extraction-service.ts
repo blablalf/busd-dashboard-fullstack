@@ -25,12 +25,11 @@ export class DataExtractionService implements OnModuleInit {
   }
 
   async extractData() {
-    const lastBlockFetchedResult = await this.prisma.apiData.findFirst({
+    let lastBlockFetchedResult = await this.prisma.apiData.findFirst({
       select: { lastBlockFetched: true },
     });
-    const lastBlockFetched: bigint =
+    let lastBlockFetched: bigint =
       lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
-
     const contractAddress = env.CONTRACT_ADDRESS;
 
     const currentBlock = await this.client.getClient().getBlockNumber();
@@ -46,6 +45,10 @@ export class DataExtractionService implements OnModuleInit {
     });
 
     for (const event of events) {
+      lastBlockFetchedResult = await this.prisma.apiData.findFirst({
+        select: { lastBlockFetched: true },
+      });
+      lastBlockFetched = lastBlockFetchedResult?.lastBlockFetched ?? BigInt(0);
       const {
         args,
         eventName: name,
@@ -57,7 +60,7 @@ export class DataExtractionService implements OnModuleInit {
       const to = 'to' in args ? (args.to as string) : null;
       const owner = 'owner' in args ? (args.owner as string) : null;
       const spender = 'spender' in args ? (args.spender as string) : null;
-      const value = args.value as bigint;
+      const value: bigint = args.value;
 
       const createEventDto: CreateEventDto = {
         eventName: name,
@@ -66,7 +69,7 @@ export class DataExtractionService implements OnModuleInit {
         to: to,
         owner: owner,
         spender: spender,
-        value: value,
+        value: value.toString(),
         blockNumber: eventBlockNumber,
       };
 
@@ -75,13 +78,13 @@ export class DataExtractionService implements OnModuleInit {
       });
 
       await this.prisma.apiData.update({
-        where: { lastBlockFetched },
+        where: { id: 1 },
         data: { lastBlockFetched: eventBlockNumber },
       });
     }
 
     await this.prisma.apiData.update({
-      where: { lastBlockFetched },
+      where: { id: 1 },
       data: { lastBlockFetched: BigInt(currentBlock) },
     });
   }
@@ -115,23 +118,25 @@ export class DataExtractionService implements OnModuleInit {
           const to = 'to' in args ? (args.to as string) : null;
           const owner = 'owner' in args ? (args.owner as string) : null;
           const spender = 'spender' in args ? (args.spender as string) : null;
-          const value = args.value;
+          const value = args.value as bigint;
+
+          const createEventDto: CreateEventDto = {
+            eventName: name,
+            txHash: transactionHash,
+            from: from,
+            to: to,
+            owner: owner,
+            spender: spender,
+            value: value.toString(),
+            blockNumber: eventBlockNumber,
+          };
 
           await this.prisma.event.create({
-            data: {
-              eventName: name,
-              txHash: transactionHash,
-              from,
-              to,
-              owner,
-              spender,
-              value,
-              blockNumber: eventBlockNumber,
-            },
+            data: createEventDto,
           });
 
           await this.prisma.apiData.update({
-            where: { lastBlockFetched },
+            where: { id: 1 },
             data: { lastBlockFetched: eventBlockNumber },
           });
         });

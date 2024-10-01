@@ -1,8 +1,9 @@
 -- CreateTable
 CREATE TABLE "ApiData" (
+    "id" SERIAL NOT NULL,
     "lastBlockFetched" BIGINT NOT NULL,
 
-    CONSTRAINT "ApiData_pkey" PRIMARY KEY ("lastBlockFetched")
+    CONSTRAINT "ApiData_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -23,7 +24,7 @@ CREATE TABLE "Event" (
     "to" TEXT,
     "owner" TEXT,
     "spender" TEXT,
-    "value" BIGINT,
+    "value" TEXT NOT NULL,
     "blockNumber" BIGINT NOT NULL,
 
     CONSTRAINT "Event_pkey" PRIMARY KEY ("id")

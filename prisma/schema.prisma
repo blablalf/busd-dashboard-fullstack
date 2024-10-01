@@ -15,7 +15,8 @@ datasource db {
 }
 
 model ApiData {
-  lastBlockFetched BigInt @id
+  id               Int     @id @default(autoincrement())
+  lastBlockFetched BigInt
 }
 
 model UserData {
@@ -32,6 +33,6 @@ model Event {
   to          String?
   owner       String?
   spender     String?
-  value       BigInt
+  value       String
   blockNumber BigInt
 }
