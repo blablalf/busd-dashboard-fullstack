@@ -38,6 +38,7 @@ services:
       - ./front/.env
     volumes:
       - ./front:/usr/app/front
+    stdin_open: true
 
 networks:
   app-network:
