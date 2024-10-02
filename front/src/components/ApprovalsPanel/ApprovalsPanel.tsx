@@ -1,10 +1,10 @@
-import useGetApprovals from "../../hooks/useGetApprovals";
 import { FaSpinner } from "react-icons/fa";
 
 import "./ApprovalsPanel.css";
+import useGetApprovalsApi from "../../hooks/useGetApprovalsApi";
 
 const ApprovalsPanel = () => {
-  const { data: approvals } = useGetApprovals();
+  const { data: approvals } = useGetApprovalsApi();
 
   return (
     <div className="approvals-panel" id="manage-allowances">

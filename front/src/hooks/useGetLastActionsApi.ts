@@ -2,19 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import useGetActions from "./useGetActions";
 import useGetUserAddress from "./useGetUserAddress";
 import { address0, getBlockTimestamp } from "../adapters/ClientsAdapter";
-
-interface Action {
-  id: number;
-  blockNumber: string;
-  eventName: string;
-  timestamp: bigint;
-  txHash: string;
-  from?: string;
-  to?: string;
-  owner?: string;
-  spender?: string;
-  value: string;
-}
+import { Action } from "../adapters/ApiAdapter";
 
 export default function useGetLastActionsApi(
   anyUser: boolean,
@@ -76,7 +64,7 @@ export default function useGetLastActionsApi(
   };
 
   return useQuery({
-    queryKey: [anyUser ? "lastAnyUserActions" : "lastUserActions", userAddress],
+    queryKey: [anyUser ? "lastAnyUserActionsApi" : "lastUserActionsApi", userAddress],
     queryFn: () => getLastActionEvents(anyUser, actionsAmount),
     enabled: !getActionsLoading,
   });

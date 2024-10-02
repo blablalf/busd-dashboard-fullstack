@@ -19,6 +19,6 @@ export default function useGetApprovals() {
     queryKey: ["approvals"],
     queryFn: getApprovalEventsFrom0ToLastBlock,
     enabled: userAddress ? true : false,
-    // refetchInterval: 60000,
+    // refetchInterval: 30000000, // 5 minutes
   });
 }
