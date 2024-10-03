@@ -36,3 +36,8 @@ model Event {
   value       String
   blockNumber String
 }
+
+model DailyTransfers {
+  date        DateTime  @id
+  totalTransfers String
+}

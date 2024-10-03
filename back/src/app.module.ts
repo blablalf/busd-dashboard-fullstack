@@ -7,7 +7,7 @@ import { EventModule } from './database/event/event.module';
 import { DataExtractionModule } from './data-extraction/data-extraction-module';
 import { ApiDataModule } from './database/api-data/api-data.module';
 import { PrismaModule } from './database/prisma.module';
-import { TransfersModule } from './database/transfers/transfers.module';
+import { DailyTransfersModule } from './database/transfers/daily-transfers.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { TransfersModule } from './database/transfers/transfers.module';
     DataExtractionModule,
     UserDataModule,
     EventModule,
-    TransfersModule,
+    DailyTransfersModule,
   ],
   controllers: [AppController],
   providers: [AppService, ClientService],

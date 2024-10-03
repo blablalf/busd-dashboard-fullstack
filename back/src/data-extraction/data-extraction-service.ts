@@ -6,6 +6,7 @@ import { parseAbi } from 'viem';
 import { PrismaService } from '../database/prisma.service';
 import ClientService from './client-service';
 import { CreateEventDto } from '../database/event/dto/create-event.dto';
+import { DailyTransfersService } from '../database/transfers/daily-transfers.service';
 
 @Injectable()
 export class DataExtractionService implements OnModuleInit {
@@ -13,6 +14,7 @@ export class DataExtractionService implements OnModuleInit {
   constructor(
     private readonly prisma: PrismaService,
     private readonly client: ClientService,
+    private readonly dailyTransfersService: DailyTransfersService,
   ) {}
 
   async onModuleInit() {
@@ -78,6 +80,9 @@ export class DataExtractionService implements OnModuleInit {
         data: createEventDto,
       });
 
+      // Check if event name is Transfer
+      await this.handleTransfer(event);
+
       await this.prisma.apiData.update({
         where: { id: 1 },
         data: { lastBlockFetched: eventBlockNumber },
@@ -136,6 +141,8 @@ export class DataExtractionService implements OnModuleInit {
             data: createEventDto,
           });
 
+          await this.handleTransfer(log);
+
           await this.prisma.apiData.update({
             where: { id: 1 },
             data: { lastBlockFetched: eventBlockNumber },
@@ -143,5 +150,41 @@ export class DataExtractionService implements OnModuleInit {
         });
       },
     });
+  }
+
+  async handleTransfer(event) {
+    if (event.name === 'Transfer') {
+      // If so, get the timestamp of the block, and update daily transfers table
+      const blockNumber = event.blockNumber;
+      const block = await this.client.getClient().getBlock({ blockNumber });
+      const timestamp = block.timestamp * BigInt(1000);
+
+      const date = new Date(timestamp.toString());
+
+      const dailyTransfer = await this.prisma.dailyTransfers.findUnique({
+        where: { date },
+      });
+
+      if (dailyTransfer) {
+        // retrieve the old total value transferred and increment it
+        const oldTotalValueTransferred =
+          await this.dailyTransfersService.findOne(date);
+        const newTotalValueTransferred =
+          BigInt(oldTotalValueTransferred.toString()) + event.args.value;
+        await this.prisma.dailyTransfers.update({
+          where: { date },
+          data: {
+            totalTransfers: newTotalValueTransferred.toString(),
+          },
+        });
+      } else {
+        await this.prisma.dailyTransfers.create({
+          data: {
+            date,
+            totalTransfers: event.args.value.toString(),
+          },
+        });
+      }
+    }
   }
 }
