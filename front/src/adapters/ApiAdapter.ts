@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_REACT_APP_API_BASE_URL;
-console.log("API_BASE_URL", API_BASE_URL);
 
 export interface Action {
     id: number;
@@ -23,6 +22,14 @@ const api = axios.create({
 
 export async function getActions() {
     const response = await api.get(`/event`);
+    if (response.status !== 200) {
+        throw new Error("Failed to fetch data");
+    }
+    return response.data;
+}
+
+export async function getDailyTransfers() {
+    const response = await api.get(`/transfers`);
     if (response.status !== 200) {
         throw new Error("Failed to fetch data");
     }

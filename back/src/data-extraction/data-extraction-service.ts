@@ -154,15 +154,14 @@ export class DataExtractionService implements OnModuleInit {
 
   async handleTransfer(event) {
     if (event.eventName === 'Transfer') {
-      console.log('Transfer event detected');
       // If so, get the timestamp of the block, and update daily transfers table
       const blockNumber = event.blockNumber;
       const block = await this.client.getClient().getBlock({ blockNumber });
       const timestamp = block.timestamp * BigInt(1000);
       const timestampNumber = Number(timestamp);
-      console.log('timestamp:', timestampNumber);
 
       const date = new Date(timestampNumber);
+      date.setHours(0, 0, 0, 0);
       const dailyTransfer = await this.prisma.dailyTransfers.findUnique({
         where: { date },
       });
@@ -171,7 +170,6 @@ export class DataExtractionService implements OnModuleInit {
         // retrieve the old total value transferred and increment it
         const oldTotalValueTransferred =
           await this.dailyTransfersService.findOne(date);
-        console.log('oldTotalValueTransferred:', oldTotalValueTransferred);
         const newTotalValueTransferred =
           BigInt(oldTotalValueTransferred.totalTransfers.toString()) +
           event.args.value;

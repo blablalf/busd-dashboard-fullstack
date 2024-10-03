@@ -1,4 +1,14 @@
-import { createWalletClient, createPublicClient, custom, WalletClient, PublicClient, Account, WatchContractEventReturnType, parseAbiItem, parseAbi } from "viem";
+import {
+  createWalletClient,
+  createPublicClient,
+  custom,
+  WalletClient,
+  PublicClient,
+  Account,
+  WatchContractEventReturnType,
+  parseAbiItem,
+  parseAbi,
+} from "viem";
 import { sepolia } from "viem/chains";
 import "viem/window";
 
@@ -79,8 +89,10 @@ export async function getUserAddress() {
 }
 
 export async function getEtherBalance(accountAddress: string) {
-  if (!window.publicClient || !accountAddress.startsWith('0x')) return null;
-  return await window.publicClient.getBalance({ address: accountAddress as `0x${string}` });
+  if (!window.publicClient || !accountAddress.startsWith("0x")) return null;
+  return await window.publicClient.getBalance({
+    address: accountAddress as `0x${string}`,
+  });
 }
 
 export async function getChainId() {
@@ -89,7 +101,7 @@ export async function getChainId() {
 }
 
 export async function getTokenName(tokenAddress: string) {
-  if (!window.publicClient || !tokenAddress.startsWith('0x')) return null;
+  if (!window.publicClient || !tokenAddress.startsWith("0x")) return null;
 
   return await window.publicClient.readContract({
     address: tokenAddress as `0x${string}`,
@@ -98,8 +110,11 @@ export async function getTokenName(tokenAddress: string) {
   });
 }
 
-export async function getTokenBalance(tokenAddress: string, userAddress: string): Promise<bigint | null> {
-  if (!window.publicClient || !tokenAddress.startsWith('0x')) return null;
+export async function getTokenBalance(
+  tokenAddress: string,
+  userAddress: string
+): Promise<bigint | null> {
+  if (!window.publicClient || !tokenAddress.startsWith("0x")) return null;
 
   const balance = await window.publicClient.readContract({
     address: tokenAddress as `0x${string}`,
@@ -111,8 +126,10 @@ export async function getTokenBalance(tokenAddress: string, userAddress: string)
   return balance as bigint;
 }
 
-export async function getTokenTotalSupply(tokenAddress: string): Promise<bigint | null> {
-  if (!window.publicClient || !tokenAddress.startsWith('0x')) return null;
+export async function getTokenTotalSupply(
+  tokenAddress: string
+): Promise<bigint | null> {
+  if (!window.publicClient || !tokenAddress.startsWith("0x")) return null;
 
   const totalSupply = await window.publicClient.readContract({
     address: tokenAddress as `0x${string}`,
@@ -123,8 +140,18 @@ export async function getTokenTotalSupply(tokenAddress: string): Promise<bigint 
   return totalSupply as bigint;
 }
 
-export async function getAllowance(tokenAddress: string, owner: string, spender: string): Promise<bigint> {
-  if (!window.publicClient || !tokenAddress.startsWith('0x') || !owner.startsWith('0x') || !spender.startsWith('0x')) return BigInt(0);
+export async function getAllowance(
+  tokenAddress: string,
+  owner: string,
+  spender: string
+): Promise<bigint> {
+  if (
+    !window.publicClient ||
+    !tokenAddress.startsWith("0x") ||
+    !owner.startsWith("0x") ||
+    !spender.startsWith("0x")
+  )
+    return BigInt(0);
 
   const allowance = await window.publicClient.readContract({
     address: tokenAddress as `0x${string}`,
@@ -137,7 +164,7 @@ export async function getAllowance(tokenAddress: string, owner: string, spender:
 }
 
 export async function getTokenOwner(tokenAddress: string) {
-  if (!window.publicClient || !tokenAddress.startsWith('0x')) return null;
+  if (!window.publicClient || !tokenAddress.startsWith("0x")) return null;
 
   return await window.publicClient.readContract({
     address: tokenAddress as `0x${string}`,
@@ -146,8 +173,10 @@ export async function getTokenOwner(tokenAddress: string) {
   });
 }
 
-export async function getTokenDecimals(tokenAddress: string): Promise<number | null> {
-  if (!window.publicClient || !tokenAddress.startsWith('0x')) return null;
+export async function getTokenDecimals(
+  tokenAddress: string
+): Promise<number | null> {
+  if (!window.publicClient || !tokenAddress.startsWith("0x")) return null;
 
   const decimals = await window.publicClient.readContract({
     address: tokenAddress as `0x${string}`,
@@ -157,40 +186,68 @@ export async function getTokenDecimals(tokenAddress: string): Promise<number | n
   return decimals as number;
 }
 
-export async function getApprovalEvents(tokenAddress: string, userAddress: string | Account, fromBlock: bigint, toBlock: bigint) {
-  if (!window.publicClient || !tokenAddress.startsWith('0x') || (typeof userAddress == "string" ? !userAddress.startsWith('0x') : !userAddress.address.startsWith('0x'))) return null;
+export async function getApprovalEvents(
+  tokenAddress: string,
+  userAddress: string | Account,
+  fromBlock: bigint,
+  toBlock: bigint
+) {
+  if (
+    !window.publicClient ||
+    !tokenAddress.startsWith("0x") ||
+    (typeof userAddress == "string"
+      ? !userAddress.startsWith("0x")
+      : !userAddress.address.startsWith("0x"))
+  )
+    return null;
 
-  const logs = await window.publicClient.getLogs({  
+  const logs = await window.publicClient.getLogs({
     address: tokenAddress as `0x${string}`,
-    event: parseAbiItem('event Approval(address indexed owner, address indexed spender, uint256 value)'),
+    event: parseAbiItem(
+      "event Approval(address indexed owner, address indexed spender, uint256 value)"
+    ),
     args: {
-      owner: userAddress as `0x${string}`
+      owner: userAddress as `0x${string}`,
     },
     fromBlock: fromBlock,
-    toBlock: toBlock
+    toBlock: toBlock,
   });
 
   return logs;
 }
 
-export async function getApprovalsWithBlocksGap(tokenAddress: string, userAddress: string | Account, blocksGap: number = 1000) {
+export async function getApprovalsWithBlocksGap(
+  tokenAddress: string,
+  userAddress: string | Account,
+  blocksGap: number = 1000
+) {
   const blockNumber = await getBlockNumber();
   const tokenCreateBlockNumber = await getTokenCreateBlock();
   const events = [];
-  let lastBlockHandled; 
+  let lastBlockHandled;
   const approvals = new Map();
-  
+
   if (!blockNumber || !tokenCreateBlockNumber) return null;
   lastBlockHandled = BigInt(tokenCreateBlockNumber);
 
-  console.log("Getting approvals... From block", lastBlockHandled, "to block", blockNumber);
+  console.log(
+    "Getting approvals... From block",
+    lastBlockHandled,
+    "to block",
+    blockNumber
+  );
 
   let progress = BigInt(0);
 
   while (lastBlockHandled < blockNumber!) {
     const fromBlock = lastBlockHandled;
     const toBlock: bigint = lastBlockHandled + BigInt(blocksGap);
-    const logs = await getApprovalEvents(tokenAddress, userAddress!, BigInt(fromBlock), BigInt(toBlock));
+    const logs = await getApprovalEvents(
+      tokenAddress,
+      userAddress!,
+      BigInt(fromBlock),
+      BigInt(toBlock)
+    );
     for (const approval of logs!) {
       const spender = approval.args.spender;
       const value = approval.args.value;
@@ -198,9 +255,12 @@ export async function getApprovalsWithBlocksGap(tokenAddress: string, userAddres
     }
     events.push(logs);
     lastBlockHandled = toBlock;
-    
-    progress = (BigInt(100) * (lastBlockHandled - BigInt(tokenCreateBlockNumber)) / (blockNumber - BigInt(tokenCreateBlockNumber)));
-    if (progress % BigInt(5) == BigInt(0)) console.log(`Approval loading progress: ${progress}%`);
+
+    progress =
+      (BigInt(100) * (lastBlockHandled - BigInt(tokenCreateBlockNumber))) /
+      (blockNumber - BigInt(tokenCreateBlockNumber));
+    if (progress % BigInt(5) == BigInt(0))
+      console.log(`Approval loading progress: ${progress}%`);
   }
 
   console.log("Approvals ->", approvals);
@@ -215,65 +275,98 @@ export async function getBlockNumber() {
 
 export async function getBlockTimestamp(blockNumber: bigint) {
   if (!window.publicClient) return null;
-  const block = await window.publicClient.getBlock({blockNumber});
+  const block = await window.publicClient.getBlock({ blockNumber });
   return block.timestamp;
 }
 
-export async function getLastActionsWithBlocksGap(tokenAddress: string, userAddress?: string | Account, actionsAmount: number = 10, blocksGap: number = 1000) {
-  if (!window.publicClient || !tokenAddress.startsWith('0x') || (userAddress && (typeof userAddress == "string" ? !userAddress.startsWith('0x') : !userAddress.address.startsWith('0x')))) return null;
+export async function getLastActionsWithBlocksGap(
+  tokenAddress: string,
+  userAddress?: string | Account,
+  actionsAmount: number = 10,
+  blocksGap: number = 1000
+) {
+  if (
+    !window.publicClient ||
+    !tokenAddress.startsWith("0x") ||
+    (userAddress &&
+      (typeof userAddress == "string"
+        ? !userAddress.startsWith("0x")
+        : !userAddress.address.startsWith("0x")))
+  )
+    return null;
 
   const tokenCreatedBlockStr = await getTokenCreateBlock();
   const blockNumber = await getBlockNumber();
   const actions = [];
-  const tokenCreatedBlock = tokenCreatedBlockStr ? BigInt(tokenCreatedBlockStr) : BigInt(0);;
+  const tokenCreatedBlock = tokenCreatedBlockStr
+    ? BigInt(tokenCreatedBlockStr)
+    : BigInt(0);
   let lastBlockHandled = blockNumber ? BigInt(blockNumber) : BigInt(0);
   let totalLogsAmount = 0;
 
-  while (totalLogsAmount < actionsAmount && lastBlockHandled > tokenCreatedBlock) {
+  while (
+    totalLogsAmount < actionsAmount &&
+    lastBlockHandled > tokenCreatedBlock
+  ) {
     const fromBlock = lastBlockHandled - BigInt(blocksGap);
-    const toBlock: bigint = lastBlockHandled; 
+    const toBlock: bigint = lastBlockHandled;
 
     const logs = await window.publicClient.getLogs({
       address: tokenAddress as `0x${string}`,
-      events: parseAbi([ 
-        'event Approval(address indexed owner, address indexed spender, uint256 value)',
-        'event Transfer(address indexed from, address indexed to, uint256 value)',
+      events: parseAbi([
+        "event Approval(address indexed owner, address indexed spender, uint256 value)",
+        "event Transfer(address indexed from, address indexed to, uint256 value)",
       ]),
       fromBlock: fromBlock,
-      toBlock: toBlock
+      toBlock: toBlock,
     });
 
     if (userAddress) {
-        for (const log of logs.reverse()) {
-          if (totalLogsAmount < actionsAmount && actions.length < actionsAmount && ((log.eventName === "Approval" && log.args.owner === userAddress) || (log.eventName === "Transfer" && log.args.from === userAddress))) {
-            actions.push(log);
-            totalLogsAmount++;
-          }
+      for (const log of logs.reverse()) {
+        if (
+          totalLogsAmount < actionsAmount &&
+          actions.length < actionsAmount &&
+          ((log.eventName === "Approval" && log.args.owner === userAddress) ||
+            (log.eventName === "Transfer" && log.args.from === userAddress))
+        ) {
+          actions.push(log);
+          totalLogsAmount++;
+        }
       }
     } else {
-        for (const log of logs.reverse()) {
-          if (actions.length < actionsAmount) {
-            actions.push(log);
-            totalLogsAmount++;
-          }
+      for (const log of logs.reverse()) {
+        if (actions.length < actionsAmount) {
+          actions.push(log);
+          totalLogsAmount++;
+        }
       }
     }
 
     lastBlockHandled = fromBlock;
   }
-  
+
   return actions;
 }
 
-export async function getTokenUserInfo(tokenAddress: string, userAddress: string | Account) {
-  if (!window.publicClient || !tokenAddress.startsWith('0x') || (typeof userAddress == "string" ? !userAddress.startsWith('0x') : !userAddress.address.startsWith('0x'))) return null;
+export async function getTokenUserInfo(
+  tokenAddress: string,
+  userAddress: string | Account
+) {
+  if (
+    !window.publicClient ||
+    !tokenAddress.startsWith("0x") ||
+    (typeof userAddress == "string"
+      ? !userAddress.startsWith("0x")
+      : !userAddress.address.startsWith("0x"))
+  )
+    return null;
 
   const callRes = await window.publicClient.multicall({
     contracts: [
       {
         address: tokenAddress as `0x${string}`,
         abi: tokenAbi,
-        functionName: 'totalSupply',
+        functionName: "totalSupply",
       },
       {
         address: tokenAddress as `0x${string}`,
@@ -290,21 +383,34 @@ export async function getTokenUserInfo(tokenAddress: string, userAddress: string
         address: tokenAddress as `0x${string}`,
         abi: tokenAbi,
         functionName: "name",
-      }
-    ]
-  })
-  
-  const totalSupply = callRes[0].status == "success" ? callRes[0].result : BigInt(0);
-  const balance = callRes[1].status == "success" ? callRes[1].result : BigInt(0);
-  const decimals = callRes[2].status == "success" ? callRes[2].result : BigInt(0);
+      },
+    ],
+  });
+
+  const totalSupply =
+    callRes[0].status == "success" ? callRes[0].result : BigInt(0);
+  const balance =
+    callRes[1].status == "success" ? callRes[1].result : BigInt(0);
+  const decimals =
+    callRes[2].status == "success" ? callRes[2].result : BigInt(0);
   const name = callRes[3].status == "success" ? callRes[3].result : "";
 
   return { balance, totalSupply, decimals, name };
 }
 
-export function watchMintEvent(tokenAddress: string, toAddress: string, _amount: bigint, onLogs: WatchContractEventReturnType) {
-  if (!window.publicClient || !tokenAddress.startsWith('0x') || !toAddress.startsWith('0x')) return null;
-  
+export function watchMintEvent(
+  tokenAddress: string,
+  toAddress: string,
+  _amount: bigint,
+  onLogs: WatchContractEventReturnType
+) {
+  if (
+    !window.publicClient ||
+    !tokenAddress.startsWith("0x") ||
+    !toAddress.startsWith("0x")
+  )
+    return null;
+
   return window.publicClient.watchContractEvent({
     address: tokenAddress as `0x${string}`,
     abi: tokenAbi,
@@ -336,12 +442,21 @@ export async function switchChain() {
   }
 }
 
-export async function mintToken(tokenAddress: string, userAddress: string, amount: bigint) {
-  if (!window.walletClient || !tokenAddress.startsWith('0x') || !userAddress.startsWith('0x')) return null;
+export async function mintToken(
+  tokenAddress: string,
+  userAddress: string,
+  amount: bigint
+) {
+  if (
+    !window.walletClient ||
+    !tokenAddress.startsWith("0x") ||
+    !userAddress.startsWith("0x")
+  )
+    return null;
 
   return await window.walletClient.writeContract({
     address: tokenAddress as `0x${string}`,
-    account: userAddress as (`0x${string}` | Account),
+    account: userAddress as `0x${string}` | Account,
     abi: tokenAbi,
     functionName: "mint",
     args: [amount],
@@ -355,11 +470,17 @@ export async function transferToken(
   toAddress: string,
   amount: bigint
 ) {
-  if (!window.walletClient || !tokenAddress.startsWith('0x') || !userAddress.startsWith('0x') || !toAddress.startsWith('0x')) return null;
+  if (
+    !window.walletClient ||
+    !tokenAddress.startsWith("0x") ||
+    !userAddress.startsWith("0x") ||
+    !toAddress.startsWith("0x")
+  )
+    return null;
 
   return await window.walletClient.writeContract({
     address: tokenAddress as `0x${string}`,
-    account: userAddress as (`0x${string}` | Account),
+    account: userAddress as `0x${string}` | Account,
     abi: tokenAbi,
     functionName: "transfer",
     args: [toAddress, amount],
@@ -373,11 +494,17 @@ export async function approveToken(
   spenderAddress: string,
   amount: bigint
 ) {
-  if (!window.walletClient || !tokenAddress.startsWith('0x') || !ownerAddress.startsWith('0x') || !spenderAddress.startsWith('0x')) return null;
+  if (
+    !window.walletClient ||
+    !tokenAddress.startsWith("0x") ||
+    !ownerAddress.startsWith("0x") ||
+    !spenderAddress.startsWith("0x")
+  )
+    return null;
 
   return await window.walletClient.writeContract({
     address: tokenAddress as `0x${string}`,
-    account: ownerAddress as (`0x${string}` | Account),
+    account: ownerAddress as `0x${string}` | Account,
     abi: tokenAbi,
     functionName: "approve",
     args: [spenderAddress, amount],
@@ -392,11 +519,18 @@ export async function transferFromToken(
   recipientAddress: string,
   amount: bigint
 ) {
-  if (!window.walletClient || !tokenAddress.startsWith('0x') || !userAddress.startsWith('0x') || !senderAddress.startsWith('0x') || !recipientAddress.startsWith('0x')) return null;
+  if (
+    !window.walletClient ||
+    !tokenAddress.startsWith("0x") ||
+    !userAddress.startsWith("0x") ||
+    !senderAddress.startsWith("0x") ||
+    !recipientAddress.startsWith("0x")
+  )
+    return null;
 
   return await window.walletClient.writeContract({
     address: tokenAddress as `0x${string}`,
-    account: userAddress as (`0x${string}` | Account),
+    account: userAddress as `0x${string}` | Account,
     abi: tokenAbi,
     functionName: "transferFrom",
     args: [senderAddress, recipientAddress, amount],
@@ -404,12 +538,23 @@ export async function transferFromToken(
   });
 }
 
-export async function burnToken(tokenAddress: string, userAddress: string | Account, amount: bigint) {
-  if (!window.walletClient || !tokenAddress.startsWith('0x') || (typeof userAddress == "string" ? !userAddress.startsWith('0x') : !userAddress.address.startsWith('0x'))) return null;
+export async function burnToken(
+  tokenAddress: string,
+  userAddress: string | Account,
+  amount: bigint
+) {
+  if (
+    !window.walletClient ||
+    !tokenAddress.startsWith("0x") ||
+    (typeof userAddress == "string"
+      ? !userAddress.startsWith("0x")
+      : !userAddress.address.startsWith("0x"))
+  )
+    return null;
 
   return await window.walletClient.writeContract({
     address: tokenAddress as `0x${string}`,
-    account: userAddress as (`0x${string}` | Account),
+    account: userAddress as `0x${string}` | Account,
     abi: tokenAbi,
     functionName: "burn",
     args: [amount],
@@ -422,11 +567,17 @@ export async function transferOwnership(
   userAddress: string,
   newOwnerAddress: string
 ) {
-  if (!window.walletClient || !tokenAddress.startsWith('0x') || !userAddress.startsWith('0x') || !newOwnerAddress.startsWith('0x')) return null;
+  if (
+    !window.walletClient ||
+    !tokenAddress.startsWith("0x") ||
+    !userAddress.startsWith("0x") ||
+    !newOwnerAddress.startsWith("0x")
+  )
+    return null;
 
   return await window.walletClient.writeContract({
     address: tokenAddress as `0x${string}`,
-    account: userAddress as (`0x${string}` | Account),
+    account: userAddress as `0x${string}` | Account,
     abi: tokenAbi,
     functionName: "transferOwnership",
     args: [newOwnerAddress],
