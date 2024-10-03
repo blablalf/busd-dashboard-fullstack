@@ -1,0 +1,22 @@
+.chart {
+    width: 50%;
+    position: relative;
+    z-index: -1000;
+}
+
+.chart-buttons {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.chart-container {
+    height: 400px;
+    width: 100%;
+    margin-top: 60px;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}

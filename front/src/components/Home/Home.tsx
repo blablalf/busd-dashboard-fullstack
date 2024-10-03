@@ -15,6 +15,7 @@ import useIsUserOwner from "../../hooks/useIsUserOwner.ts";
 import "./Home.css";
 import LastActionsPanel from "../LastActionsPanel/LastActionsPanel.tsx";
 import ApprovalsPanel from "../ApprovalsPanel/ApprovalsPanel.tsx";
+import TransfertChart from "../TransfertChart/TransfertChart.tsx";
 
 export default function Home() {
   const isLoggedIn = useIsLoggedIn();
@@ -36,6 +37,9 @@ export default function Home() {
           <div className="double-action-container" id="manage-transfers">
             <Transfer />
             <TransferFrom />
+          </div>
+          <div>
+            <TransfertChart />
           </div>
           {isUserOwner ? (
             <div className="double-action-container" id="manage-ownership">
