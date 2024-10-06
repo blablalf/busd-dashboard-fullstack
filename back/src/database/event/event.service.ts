@@ -51,4 +51,8 @@ export class EventService {
       where: { id },
     });
   }
+
+  removeAll() {
+    return this.prisma.event.deleteMany();
+  }
 }

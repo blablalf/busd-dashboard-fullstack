@@ -42,4 +42,9 @@ export class DailyTransfersController {
   remove(@Param('date') date: Date) {
     return this.transfersService.remove(date);
   }
+
+  @Delete()
+  removeAll() {
+    return this.transfersService.removeAll();
+  }
 }

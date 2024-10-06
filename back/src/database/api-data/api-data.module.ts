@@ -7,5 +7,6 @@ import { PrismaModule } from '../prisma.module';
   imports: [PrismaModule],
   controllers: [ApiDataController],
   providers: [ApiDataService],
+  exports: [ApiDataService],
 })
 export class ApiDataModule {}

@@ -4,6 +4,7 @@ import { getStep } from "../utils/Decimals.ts";
 
 import useBurnToken from "../hooks/useBurnToken.ts";
 import useGetTokenDecimals from "../hooks/useGetTokenDecimals.ts";
+import { resetData } from "../adapters/ApiAdapter.ts";
 
 export default function Burn() {
   const { mutate: burn } = useBurnToken();
@@ -25,17 +26,24 @@ export default function Burn() {
     }
   }
 
+  async function onDelete() {
+    await resetData();
+  }
+
   return (
-    <form onSubmit={onSubmit}>
-      <h3>Burn tokens!</h3>
-      <input
-        type="number"
-        step={stepValue ? stepValue : getStep(18)}
-        min="0"
-        placeholder="Amount"
-        name="amount"
-      />
-      <button type="submit">Burn</button>
-    </form>
+    <>
+      <form onSubmit={onSubmit}>
+        <h3>Burn tokens!</h3>
+        <input
+          type="number"
+          step={stepValue ? stepValue : getStep(18)}
+          min="0"
+          placeholder="Amount"
+          name="amount"
+        />
+        <button type="submit">Burn</button>
+      </form>
+      <button onClick={onDelete}>DELETE</button>
+    </>
   );
 }

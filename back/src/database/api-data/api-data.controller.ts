@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
 import { ApiDataService } from './api-data.service';
 import { UpdateApiDatumDto } from './dto/update-api-datum.dto';
 
@@ -19,5 +19,10 @@ export class ApiDataController {
   @Patch()
   update(@Body() updateApiDatumDto: UpdateApiDatumDto) {
     return this.apiDataService.updateLastBlockFetched(updateApiDatumDto);
+  }
+
+  @Delete()
+  removeAll() {
+    return this.apiDataService.removeAll();
   }
 }

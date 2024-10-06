@@ -55,4 +55,8 @@ export class ApiDataService implements OnModuleInit {
       data: updateApiDatumDto,
     });
   }
+
+  async removeAll() {
+    return this.prisma.apiData.deleteMany();
+  }
 }

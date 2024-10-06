@@ -35,4 +35,8 @@ export class DailyTransfersService {
       where: { date },
     });
   }
+
+  removeAll() {
+    return this.prisma.dailyTransfers.deleteMany();
+  }
 }
