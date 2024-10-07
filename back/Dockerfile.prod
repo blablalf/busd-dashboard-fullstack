@@ -15,7 +15,7 @@ RUN rm -rf node_modules
 # Install the dependencies and generate the Prisma client
 RUN pnpm install --prod
 RUN pnpm prisma generate
-RUN prisma migrate deploy
+RUN pnpm prisma migrate deploy
 
 EXPOSE 3000
 
