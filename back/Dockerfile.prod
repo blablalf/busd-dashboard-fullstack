@@ -4,12 +4,13 @@ WORKDIR /usr/app/back
 
 # RUN apk add --no-cache postgresql-client # For testing
 RUN npm install -g pnpm
+RUN pnpm install -g @nestjs/cli
 
 # Copy the app folder to the container
 COPY . .
 
 # Install the dependencies and generate the Prisma client
-RUN pnpm install --prod
+RUN pnpm install
 RUN pnpm build
 RUN pnpm prisma generate
 
