@@ -10,11 +10,8 @@ services:
       - app-network
     volumes:
       - ./back:/var/lib/postgresql/data
-    secrets: 
-      - POSTGRES_USER
-      - POSTGRES_DB
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
       interval: 10s
       timeout: 3s
       retries: 3
