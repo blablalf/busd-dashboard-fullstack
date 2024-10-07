@@ -5,6 +5,6 @@ WORKDIR /usr/app/front
 # RUN apk add --no-cache postgresql-client # For testing
 RUN npm install -g pnpm
 
-EXPOSE 5173
+EXPOSE 80
 
 CMD ["pnpm", "run", "dev"]
