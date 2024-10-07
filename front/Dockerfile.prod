@@ -4,6 +4,7 @@ WORKDIR /usr/app/front
 
 # RUN apk add --no-cache postgresql-client # For testing
 RUN npm install -g pnpm
+RUN npm install -g typescript
 
 # Copy the app folder to the container
 COPY . .
