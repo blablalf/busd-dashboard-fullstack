@@ -9,9 +9,6 @@ RUN npm install -g typescript
 # Copy the app folder to the container
 COPY . .
 
-# Remove the dist and node_modules folders
-RUN rm -rf node_modules
-
 # Install the dependencies
 RUN pnpm install
 RUN pnpm run build
