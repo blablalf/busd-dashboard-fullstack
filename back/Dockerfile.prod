@@ -10,6 +10,7 @@ COPY . .
 
 # Install the dependencies and generate the Prisma client
 RUN pnpm install --prod
+RUN pnpm build
 RUN pnpm prisma generate
 
 EXPOSE 3000
