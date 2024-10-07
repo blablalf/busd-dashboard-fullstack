@@ -13,7 +13,7 @@ COPY . .
 RUN rm -rf node_modules
 
 # Install the dependencies
-RUN pnpm install --prod
+RUN pnpm install
 RUN pnpm run build
 
 EXPOSE 80
