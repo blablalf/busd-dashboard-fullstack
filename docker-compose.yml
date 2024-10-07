@@ -9,7 +9,7 @@ services:
     networks:
       - app-network
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./back:/var/lib/postgresql/data
 
   backend:
     build:
@@ -21,7 +21,7 @@ services:
     env_file:
       - ./back/.env
     volumes:
-      - ./back:/usr/app/back
+      - db_data:/var/lib/postgresql/data
     networks:
       - app-network
 
