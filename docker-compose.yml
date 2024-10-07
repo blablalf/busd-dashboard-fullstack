@@ -9,7 +9,7 @@ services:
     networks:
       - app-network
     volumes:
-      - ./back:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
       interval: 10s
@@ -26,7 +26,7 @@ services:
     env_file:
       - ./back/.env
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./back:/var/lib/postgresql/data
     networks:
       - app-network
 
