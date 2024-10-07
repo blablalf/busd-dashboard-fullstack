@@ -19,7 +19,7 @@ services:
   backend:
     build:
       context: ./back
-      file: Dockerfile.prod
+      dockerfile: ./Dockerfile.prod
     ports:
       - "3000:3000"
     depends_on:
@@ -34,7 +34,7 @@ services:
   frontend:
     build:
       context: ./front
-      file: Dockerfile.prod
+      dockerfile: ./Dockerfile.prod
     ports:
       - "8080:8080"
     networks:
