@@ -15,6 +15,7 @@ RUN rm -rf node_modules
 # Install the dependencies and generate the Prisma client
 RUN pnpm install
 RUN pnpm prisma generate
+RUN pnpm prisma db push
 RUN pnpm run build
 
 EXPOSE 3000
