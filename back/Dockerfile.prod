@@ -8,14 +8,9 @@ RUN npm install -g pnpm
 # Copy the app folder to the container
 COPY . .
 
-# Remove the dist and node_modules folders
-RUN rm -rf dist
-RUN rm -rf node_modules
-
 # Install the dependencies and generate the Prisma client
 RUN pnpm install --prod
 RUN pnpm prisma generate
-RUN pnpm prisma migrate deploy
 
 EXPOSE 3000
 
