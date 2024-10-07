@@ -16,6 +16,6 @@ RUN rm -rf node_modules
 RUN pnpm install
 RUN pnpm run build
 
-EXPOSE 80
+EXPOSE 8080
 
 CMD ["pnpm", "run", "start"]

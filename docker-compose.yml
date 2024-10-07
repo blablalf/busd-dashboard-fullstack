@@ -34,7 +34,7 @@ services:
     build:
       context: ./front
     ports:
-      - "80:80"
+      - "8080:8080"
     networks:
       - app-network
     depends_on:
