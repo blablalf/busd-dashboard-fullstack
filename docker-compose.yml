@@ -26,8 +26,6 @@ services:
       - db
     env_file:
       - ./back/.env
-    volumes:
-      - ./back:/var/lib/postgresql/data
     networks:
       - app-network
 
@@ -43,8 +41,6 @@ services:
       - backend
     env_file:
       - ./front/.env
-    volumes:
-      - ./front:/usr/app/front
     stdin_open: true
 
 networks:
