@@ -7,4 +7,4 @@ RUN npm install -g pnpm
 
 EXPOSE 8080
 
-CMD ["pnpm", "run", "dev"]
+CMD ["pnpm", "run", "dev", "--host"]

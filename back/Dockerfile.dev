@@ -5,8 +5,8 @@ WORKDIR /usr/app/back
 # RUN apk add --no-cache postgresql-client # For testing
 RUN npm install -g pnpm
 
-# RUN rm -rf dist
-# RUN rm -rf node_modules
+RUN rm -rf dist
+RUN rm -rf node_modules
 # RUN pnpm install
 # RUN pnpm prisma generate
 # RUN pnpm run build

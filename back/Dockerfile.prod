@@ -9,6 +9,9 @@ RUN npm install -g @nestjs/cli
 # Copy the app folder to the container
 COPY . .
 
+RUN rm node_modules/
+RUN rm dist/
+
 # Install the dependencies and generate the Prisma client
 RUN pnpm install
 RUN pnpm prisma generate
