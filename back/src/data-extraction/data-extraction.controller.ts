@@ -17,7 +17,6 @@ export default class DataExtractionController {
 
   @Delete()
   async reset() {
-    console.log('resetData');
     this.transfersService.removeAll();
     this.eventService.removeAll();
     this.userDataService.removeAll();

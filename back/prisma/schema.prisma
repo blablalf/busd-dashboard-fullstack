@@ -35,6 +35,7 @@ model Event {
   spender     String?
   value       String
   blockNumber String
+  isFromWebSocket Boolean  @default(false)
 }
 
 model DailyTransfers {

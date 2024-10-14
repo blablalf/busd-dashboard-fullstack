@@ -14,4 +14,6 @@ export class CreateEventDto {
   value: string;
 
   blockNumber: string;
+
+  isFromWebSocket?: boolean;
 }

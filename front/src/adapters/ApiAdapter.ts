@@ -37,7 +37,6 @@ export async function getDailyTransfers() {
 }
 
 export async function resetData() {
-  console.log("resetData");
   const response = await api.delete(`/all`);
   if (response.status !== 200) {
     throw new Error("Failed to delete data");
